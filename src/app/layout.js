@@ -18,7 +18,7 @@ export const metadata = {
   title: "ARTIZ",
   description: "Site artisanal gabonais",
   icons: {
-    icon: "/logo.png",
+    icon: "/LOGO .png",
   },
 };
 
