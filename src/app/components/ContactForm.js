@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { motion } from "framer-motion";
+import Image from "next/image";
+
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -24,11 +26,11 @@ const ContactForm = () => {
     
 
     <div className="max-w-6xl mx-auto  px-4 text-center">
-           <h2 className=" text-center text-4xl font-bold mb-14 ">
+           <h2 className=" text-center text-4xl font-bold mb-14 mt-8 ">
           Contactez-nous
         </h2>
              
-    <div className="flex bg-gray-200 flex-col md:flex-row items-center justify-center max-w-6xl mx-auto p-6 space-y-6 md:space-y-0 md:space-x-6">
+    <div className="flex bg-gray-100 flex-col md:flex-row items-center justify-center  mx-auto p-6 space-y-6 md:space-y-0 md:space-x-6">
        
       
       <motion.div
@@ -39,18 +41,7 @@ const ContactForm = () => {
       >
        
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-gray-700 font-medium">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Entrez votre email"
-              required
-            />
-          </div>
+          
 
           <div className="flex space-x-4">
             <div className="w-1/2">
@@ -78,6 +69,18 @@ const ContactForm = () => {
               />
             </div>
           </div>
+          <div>
+            <label className="block text-gray-700 font-medium">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+              placeholder="Entrez votre email"
+              required
+            />
+          </div>
 
           <div>
             <label className="block text-gray-700 font-medium">Lieux</label>
@@ -87,7 +90,7 @@ const ContactForm = () => {
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
-                className="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
               >
                 <option value="Essassa">Essassa</option>
                 <option value="Libreville">Libreville</option>
@@ -110,7 +113,7 @@ const ContactForm = () => {
 
           <motion.button
             type="submit"
-            className="w-full bg-black text-white py-3 rounded-lg hover:bg-white hover:text-black transition duration-300 flex items-center justify-center space-x-2"
+            className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-400 hover:text-black transition duration-300 flex items-center justify-center space-x-2"
             whileHover={{ scale: 1.05 }}
           >
             <span>Envoyer ➡️</span>
@@ -125,11 +128,13 @@ const ContactForm = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
       >
-        <img
-          src="/MEL.png"
-          alt="Femme en tenue traditionnelle"
-          className="rounded-lg object-cover w-full h-full"
-        />
+      <Image
+        src="/gpt.png"
+        alt="traditionnelle"
+        width={400}
+        height={300}
+        className="rounded-lg object-cover"
+      />
       </motion.div>
     </div>
     </div>

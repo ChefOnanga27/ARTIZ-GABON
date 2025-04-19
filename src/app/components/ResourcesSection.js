@@ -1,4 +1,5 @@
 import ResourceItem from "./ResourceItem";
+import Link from "next/link";
 
 export default function ResourcesSection() {
   return (
@@ -21,9 +22,12 @@ export default function ResourcesSection() {
     <p className="mt-4 text-lg">
       Entre traditions ancestrales et créations contemporaines, explorez les collections uniques du Musée National du Gabon. Plongez dans l'histoire des peuples gabonais à travers des artefacts, des sculptures, et des récits fascinants.
     </p>
-    <button className="mt-6 bg-white text-black px-6 py-3 rounded-lg shadow-lg flex items-center">
-      Explorer les collections <span className="ml-2">➝</span>
-    </button>
+
+    <Link href="/galerie">
+  <button className="mt-6 bg-white text-black px-6 py-3 rounded-lg shadow-lg flex items-center">
+    Explorer les collections <span className="ml-2">➝</span>
+  </button>
+</Link>
   </div>
 
   

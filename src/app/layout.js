@@ -3,7 +3,6 @@ import "./globals.css";
 import Header from "../app/components/Header";
 import Footer from "../app/components/Footer";
 
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -24,6 +23,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+
     <html lang="fr">
       <head>
         <link rel="icon" href="/logo.png" type="image/png" sizes="32x32" />

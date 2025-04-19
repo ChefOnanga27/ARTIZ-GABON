@@ -203,56 +203,51 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative w-full min-h-[80vh] flex items-center justify-center bg-cover bg-center">
-        <Image
-          src="/planche.png"
-          alt="Background"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/40" />
-        
-        <div className="relative z-10 max-w-6xl mx-auto px-6 md:px-12 py-6 flex flex-col lg:flex-row items-center gap-8">
-          <div className="hidden lg:block lg:w-1/2">
-            <Image
-              src="/logos.png"
-              alt="Femme Gabonaise"
-              width={500}
-              height={500}
-              className="object-cover drop-shadow-xl"
-            />
-          </div>
+      <section className="relative h-screen w-full flex items-center justify-center bg-cover bg-center">
+  <Image
+    src="/image.png"
+    alt="Background"
+    fill
+    className="object-cover"
+    priority
+  />
+  <div className="absolute inset-0 bg-black/50" />
 
-          <div className="w-full lg:w-1/2 text-white text-center">
-            <motion.h1
-              className="text-5xl md:text-6xl lg:text-7xl font-bold mb-4"
-              initial="hidden"
-              animate="visible"
-              variants={textAnimation}
-            >
-              Bienvenue sur <span className="text-black bg-white px-4 py-1 inline-block mt-2">ARTIZ</span>
-            </motion.h1>
+  <div className="relative z-10 max-w-4xl mx-auto text-center px-6">
+    <motion.h1
+      className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white leading-tight drop-shadow-md"
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1 }}
+    >
+      Bienvenue sur <br />
+      <span className="inline-block bg-white text-black px-5 py-2 rounded-md mt-4">
+        ARTIZ
+      </span>
+    </motion.h1>
 
-            <motion.p
-              className="text-xl md:text-2xl mb-8"
-              variants={textAnimation}
-              custom={1}
-            >
-              L'artisanat, une histoire dans chaque pièce. Des créations qui parlent du Gabon.
-            </motion.p>
+    <motion.p
+      className="mt-6 text-lg md:text-xl lg:text-2xl text-white font-light drop-shadow-md"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, delay: 0.4 }}
+    >
+      L'artisanat, une histoire dans chaque pièce. <br />
+      Des créations qui parlent du Gabon.
+    </motion.p>
 
-            <motion.button
-              className="bg-black text-white px-8 py-3 rounded-lg text-lg hover:bg-gray-800 transition"
-              variants={textAnimation}
-              custom={2}
-              onClick={handleClick}
-            >
-              Inscrivez-vous maintenant
-            </motion.button>
-          </div>
-        </div>
-      </section>
+    <motion.button
+      onClick={handleClick}
+      className="mt-8 bg-white text-black font-semibold px-6 py-3 rounded-lg shadow-lg hover:bg-gray-100 transition"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, delay: 0.8 }}
+    >
+      Inscrivez-vous maintenant
+    </motion.button>
+  </div>
+</section>
+
 
       {/* Categories Carousel */}
       <section className="py-12 bg-white">

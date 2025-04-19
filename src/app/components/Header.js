@@ -1,64 +1,64 @@
 "use client";
-import { FaSearch, FaHeart, FaUser } from "react-icons/fa";
-import { FiShoppingCart } from "react-icons/fi";
-import Image from "next/image";
 import { useState } from "react";
+import { FaUser } from "react-icons/fa";
+import { FiShoppingCart } from "react-icons/fi";
+import { HiOutlineMenu, HiX } from "react-icons/hi";
+import Image from "next/image";
 
-export default function Header({ setSearchTerm }) {
-  const [inputValue, setInputValue] = useState("");
-
-  const handleSearchChange = (e) => {
-    setInputValue(e.target.value);
-    setSearchTerm(e.target.value);
-  };
+export default function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <header className="w-full border-b border-gray-200 bg-white">
-      {/* Première ligne - Logo et icônes */}
-      <div className="flex flex-col items-center px-4 py-3 md:flex-row md:justify-between md:px-6 md:py-4">
-        {/* Logo centré en haut sur mobile */}
-        <div className="mb-3 md:mb-0">
+      <div className="flex items-center justify-between px-4 py-4 md:px-6 md:py-5">
+        {/* Logo */}
+        <div>
           <Image
             src="/LOGO .png"
             alt="Logo"
-            width={80}
-            height={70}
-            className="object-cover drop-shadow-xl mx-auto md:mx-0"
+            width={110}
+            height={90}
+            className="object-cover drop-shadow-xl"
             priority
           />
         </div>
+        <nav className="hidden md:flex justify-center space-x-10 py-4 text-base md:text-lg font-semibold text-gray-900 bg-white">
+        <a href="/" className="hover:underline">Accueil</a>
+        <a href="/categorie" className="hover:underline">Produits</a>
+        <a href="/muse" className="hover:underline">Espace Musée</a>
+      </nav>
 
-        {/* Barre de recherche - Centrée sur mobile */}
-        <div className="w-full md:w-1/3 mb-3 md:mb-0">
-          <div className="relative max-w-md mx-auto">
-            <input
-              type="text"
-              value={inputValue}
-              onChange={handleSearchChange}
-              placeholder="Rechercher..."
-              className="w-full px-4 py-2 text-sm text-gray-700 bg-gray-100 border border-gray-300 rounded-full focus:outline-none"
-            />
-            <FaSearch className="absolute right-4 top-3 text-gray-500" />
-          </div>
-        </div>
+        {/* Icônes + menu burger */}
+        <div className="flex items-center space-x-6 md:space-x-10 text-2xl md:text-3xl">
+          {/* Icônes panier et user */}
+          <FiShoppingCart className="text-gray-800" size={28} />
+          <FaUser className="text-gray-800" size={28} />
 
-        {/* Icônes - Centrées sur mobile */}
-        <div className="flex justify-center space-x-6 text-lg">
-          <div className="relative">
-            <FiShoppingCart className="text-gray-800" size={18} />
-            <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">2</span>
-          </div>
-          <FaHeart className="text-gray-800" size={18} />
-          <FaUser className="text-gray-800" size={18} />
+          {/* Menu hamburger visible uniquement sur mobile */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden focus:outline-none"
+          >
+            {isMenuOpen ? (
+              <HiX className="text-gray-800" size={30} />
+            ) : (
+              <HiOutlineMenu className="text-gray-800" size={30} />
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Navigation - Centrée et responsive */}
-      <nav className="flex justify-center space-x-4 md:space-x-8 py-3 px-4 text-sm md:text-base font-semibold text-gray-900 bg-white overflow-x-auto">
-        <a href="/" className="whitespace-nowrap hover:underline">Accueil</a>
-        <a href="/categorie" className="whitespace-nowrap hover:underline">Catégories</a>
-        <a href="/muse" className="whitespace-nowrap hover:underline">Espace Musée</a>
-      </nav>
+      {/* Menu mobile déroulant */}
+      {isMenuOpen && (
+        <nav className="md:hidden flex flex-col items-center space-y-4 py-4 bg-white text-lg font-semibold text-gray-900 border-t">
+          <a href="/" className="hover:underline" onClick={() => setIsMenuOpen(false)}>Accueil</a>
+          <a href="/categorie" className="hover:underline" onClick={() => setIsMenuOpen(false)}>Produits</a>
+          <a href="/muse" className="hover:underline" onClick={() => setIsMenuOpen(false)}>Espace Musée</a>
+        </nav>
+      )}
+
+      {/* Menu desktop */}
+    
     </header>
   );
 }
