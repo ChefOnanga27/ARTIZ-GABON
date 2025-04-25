@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "../app/components/Header";
 import Footer from "../app/components/Footer";
+import FloatingWhatsApp from "../app/components/FloatingWhatsApp";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,7 +24,6 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-
     <html lang="fr">
       <head>
         <link rel="icon" href="/logo.png" type="image/png" sizes="32x32" />
@@ -32,6 +32,7 @@ export default function RootLayout({ children }) {
         <Header />
         <main className="min-h-screen">{children}</main>
         <Footer />
+        <FloatingWhatsApp />
       </body>
     </html>
   );

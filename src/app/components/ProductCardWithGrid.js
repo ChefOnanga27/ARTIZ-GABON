@@ -116,15 +116,12 @@ const ProductCardWithGrid = ({ title = "Nos articles", customProducts = null }) 
             ))}
             <span className="text-gray-500 text-xs ml-1">({product.reviews})</span>
           </div>
-          <p className="text-xl font-bold mt-1">{product.price} Fcfa</p>
+          <p className="font-bold mt-1">{product.price} Fcfa</p>
         </div>
 
         <div className="flex gap-3 mt-4">
           <button className="text-gray-600 bg-gray-200 p-3 rounded-full hover:bg-gray-300 transition">
             <AiOutlineHeart size={20} />
-          </button>
-          <button className="text-green-600 bg-green-100 p-3 rounded-full hover:bg-green-200 transition">
-            <IoLogoWhatsapp size={20} />
           </button>
           <button className="text-blue-600 bg-blue-100 p-3 rounded-full hover:bg-blue-200 transition">
             <FaShoppingCart size={20} />

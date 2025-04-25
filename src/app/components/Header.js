@@ -23,10 +23,25 @@ export default function Header() {
           />
         </div>
         <nav className="hidden md:flex justify-center space-x-10 py-4 text-base md:text-lg font-semibold text-gray-900 bg-white">
-        <a href="/" className="hover:underline">Accueil</a>
-        <a href="/categorie" className="hover:underline">Produits</a>
-        <a href="/muse" className="hover:underline">Espace Musée</a>
-      </nav>
+  <a 
+    href="/" 
+    className="relative px-4 py-2 transition-all duration-300 hover:text-shadow-slate-600 hover:drop-shadow-[0_0_15px_rgba(249,115,22,0.5)]"
+  >
+    Accueil
+  </a>
+  <a 
+    href="/categorie" 
+    className="relative px-4 py-2 transition-all duration-300 hover:text-shadow-slate-600 hover:drop-shadow-[0_0_15px_rgba(249,115,22,0.5)]"
+  >
+    Produits
+  </a>
+  <a 
+    href="/muse" 
+    className="relative px-4 py-2 transition-all duration-300 hover:text-shadow-slate-600 hover:drop-shadow-[0_0_15px_rgba(249,115,22,0.5)]"
+  >
+    Espace Musée
+  </a>
+</nav>
 
         {/* Icônes + menu burger */}
         <div className="flex items-center space-x-6 md:space-x-10 text-2xl md:text-3xl">
