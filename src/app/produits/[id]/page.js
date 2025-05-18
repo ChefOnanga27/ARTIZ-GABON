@@ -1,167 +1,208 @@
-import Image from "next/image";
-import { notFound } from "next/navigation";
+'use client';
+import { ShoppingCart, Heart, Share2, Star, ChevronLeft } from 'lucide-react';
+import { useState } from 'react';
+import Image from 'next/image';
 
-// Simule un appel API
-async function getProductData() {
-  return [
-    {
-      id: "masque-bois-001",
-      name: "Masque en bois",
-      image: "/cat.jpg",
-      price: 6750,
-      oldPrice: 7500,
-      discount: 10,
-      reviews: 97,
-      description: "Masque traditionnel gabonais sculpté à la main en bois d'ébène.",
-      details: "Fabriqué par des artisans locaux avec des techniques ancestrales.",
-      category: "masques"
-    },
-    {
-      id: "masque-fang-002",
-      name: "Masque Fang",
-      image: "/fang.jpg",
-      price: 8500,
-      reviews: 32,
-      description: "Masque Fang blanc aux motifs géométriques.",
-      details: "Utilisé lors des cérémonies traditionnelles.",
-      category: "masques"
-    },
-    {
-      id: "statuette-001",
-      name: "Statuette Kota",
-      image: "/kota.jpg",
-      price: 9500,
-      reviews: 11,
-      description: "Statuette en cuivre représentant un ancêtre Kota.",
-      details: "Objet de culte protecteur.",
-      category: "statuettes"
-    },
-    // ... autres produits
+
+export default function ProductPage() {
+  const [quantity, setQuantity] = useState(1);
+  const [activeImage, setActiveImage] = useState(0);
+  
+  // Données du produit (à adapter avec vos données réelles)
+  const product = {
+    name: "Masque en bois artisanal",
+    price: 6750,
+    currency: "Fcfa",
+    originalPrice: 8500,
+    discount: "97",
+    description: "Masque traditionnel sculpté à la main en bois d'ébène. Pièce unique réalisée par un artisan local.",
+    details: [
+      "Dimensions : 25cm x 18cm",
+      "Poids : 450g",
+      "Matériau : Bois d'ébène massif",
+      "Origine : Artisanat local",
+      "Livraison : 3-5 jours ouvrés"
+    ],
+    images: [
+      "/masque-1.jpg",
+      "/masque-2.jpg",
+      "/masque-3.jpg",
+      "/masque-details.jpg"
+    ],
+    rating: 4.7,
+    reviews: 24,
+    stock: 5
+  };
+
+  const relatedProducts = [
+    { id: 2, name: "Statue en bois", price: 12500, image: "/statue-bois.jpg" },
+    { id: 3, name: "Tableau mural", price: 8900, image: "/tableau-mural.jpg" },
+    { id: 4, name: "Vase céramique", price: 5500, image: "/vase-ceramique.jpg" },
   ];
-}
-
-export async function generateStaticParams() {
-  const products = await getProductData();
-  return products.map(product => ({ id: product.id }));
-}
-
-export default async function ProductPage({ params }) {
-  const products = await getProductData();
-  const product = products.find(p => p.id === params.id);
-
-  if (!product) return notFound();
-
-  // 🔁 Produits de la même catégorie, sauf celui qu'on affiche
-  const relatedProducts = products.filter(
-    (p) => p.category === product.category && p.id !== product.id
-  );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
-          <div className="md:flex">
-            <div className="md:w-1/2 p-6">
-              <div className="relative h-96">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  className="object-contain"
-                  priority
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Fil d'ariane */}
+      <div className="flex items-center text-sm text-gray-500 mb-6">
+        <ChevronLeft size={16} className="mr-1" />
+        <span className="hover:text-gray-700 cursor-pointer">Artisanat</span>
+        <span className="mx-2">/</span>
+        <span className="hover:text-gray-700 cursor-pointer">Masques</span>
+        <span className="mx-2">/</span>
+        <span className="text-gray-700 font-medium">{product.name}</span>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ">
+        {/* Galerie d'images */}
+        <div>
+          <div className="bg-white rounded-lg shadow-md overflow-hidden mb-4">
+            <div className="relative h-72">
+              <Image 
+                src={product.images[activeImage]} 
+                alt={product.name}
+                fill
+                className="object-contain"
+              />
+            </div>
+          </div>
+          <div className="flex gap-6 border-none w-96">
+            {product.images.map((img, index) => (
+              <button 
+                key={index}
+                onClick={() => setActiveImage(index)}
+                className={`border rounded-md overflow-hidden h-20 ${activeImage === index ? 'ring-2 ring-blue-500' : ''}`}
+              >
+                <Image 
+                  src={img}
+                  alt={`Vue ${index + 1} du produit`}
+                  width={80}
+                  height={80}
+                  className="object-cover w-full h-full"
                 />
-              </div>
-            </div>
-            
-            <div className="md:w-1/2 p-8">
-              <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
-              
-              <div className="flex items-center mt-4">
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i}>★</span>
-                  ))}
-                </div>
-                <span className="text-gray-500 ml-2">({product.reviews} avis)</span>
-              </div>
-
-              <div className="mt-6">
-                <span className="text-3xl font-bold text-gray-900">{product.price} Fcfa</span>
-                {product.oldPrice && (
-                  <span className="ml-2 text-lg text-gray-500 line-through">{product.oldPrice} Fcfa</span>
-                )}
-                {product.discount && (
-                  <span className="ml-2 text-sm bg-red-100 text-red-800 px-2 py-1 rounded">
-                    -{product.discount}%
-                  </span>
-                )}
-              </div>
-
-              <p className="mt-6 text-gray-700">{product.description}</p>
-              <p className="mt-4 text-gray-600">{product.details}</p>
-
-              <div className="mt-8 flex space-x-4">
-                <button className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition">
-                  Ajouter au panier
-                </button>
-                <button className="px-6 py-3 border border-black text-black rounded-lg hover:bg-blue-50 transition">
-                  Commander maintenant
-                </button>
-              </div>
-            </div>
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Section détails supplémentaires */}
-        <div className="mt-12 bg-white rounded-xl shadow-md p-6">
-          <h2 className="text-2xl font-bold mb-4">Détails du produit</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="font-semibold">Caractéristiques</h3>
-              <ul className="mt-2 space-y-2">
-                <li>• Matériau: Bois d'ébène</li>
-                <li>• Dimensions: 25cm x 15cm</li>
-                <li>• Poids: 500g</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold">Livraison</h3>
-              <p className="mt-2">Délai de livraison: 2-5 jours ouvrables</p>
-              <p>Frais de port: Offerts à partir de 50.000 Fcfa</p>
-            </div>
-          </div>
-        </div>
-
-        {/* 🔁 Produits similaires */}
-        {relatedProducts.length > 0 && (
-          <div className="mt-12">
-            <h2 className="text-2xl font-bold mb-4">Produits similaires</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {relatedProducts.map((item) => (
-                <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                  <div className="relative h-48">
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
-                    <p className="text-gray-600">{item.price} Fcfa</p>
-                    <a
-                      href={`/product/${item.id}`}
-                      className="inline-block mt-2 text-blue-600 hover:underline"
-                    >
-                      Voir le produit
-                    </a>
-                  </div>
-                </div>
+        {/* Détails du produit */}
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
+          
+          <div className="flex items-center mb-4">
+            <div className="flex">
+              {[...Array(5)].map((_, i) => (
+                <Star 
+                  key={i}
+                  size={18}
+                  className={`${i < Math.floor(product.rating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
+                />
               ))}
             </div>
+            <span className="text-sm text-gray-500 ml-2">({product.reviews} avis)</span>
           </div>
-        )}
+
+          <div className="mb-6">
+            <div className="flex items-center">
+              <span className="text-3xl font-bold text-gray-900 mr-3">
+                {product.price.toLocaleString()} {product.currency}
+              </span>
+              {product.originalPrice && (
+                <span className="text-lg text-gray-500 line-through">
+                  {product.originalPrice.toLocaleString()} {product.currency}
+                </span>
+              )}
+              {product.discount && (
+                <span className="ml-3 bg-red-100 text-red-800 text-sm font-medium px-2 py-0.5 rounded">
+                  -{product.discount}%
+                </span>
+              )}
+            </div>
+            {product.stock > 0 ? (
+              <span className="text-sm text-green-600">En stock ({product.stock} disponibles)</span>
+            ) : (
+              <span className="text-sm text-red-600">Rupture de stock</span>
+            )}
+          </div>
+
+          <div className="mb-6">
+            <p className="text-gray-700 mb-4">{product.description}</p>
+            <ul className="space-y-2">
+              {product.details.map((detail, i) => (
+                <li key={i} className="flex items-start">
+                  <span className="text-gray-500 mr-2">•</span>
+                  <span className="text-gray-700">{detail}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="border-t border-b border-gray-200 py-6 mb-6">
+            <div className="flex items-center gap-4 mb-4">
+              <span className="text-gray-700 mr-3">Quantité :</span>
+              <div className="flex border rounded-md">
+                <button 
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="px-3 py-1 text-gray-600 hover:bg-gray-100"
+                >
+                  -
+                </button>
+                <span className="px-4 py-1 border-x">{quantity}</span>
+                <button 
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="px-3 py-1 text-gray-600 hover:bg-gray-100"
+                >
+                  +
+                </button>
+                
+              </div>
+              <button className=" bg-black hover:bg-gray-900 text-white py-1 px-3 rounded-md flex items-center justify-center">
+                Ajouter au panier
+              </button>
+            </div>
+
+            <div className="flex ">
+             
+              {/* <button className="p-3 border rounded-md text-gray-700 hover:bg-gray-50">
+                <Heart size={20} />
+              </button>
+              <button className="p-3 border rounded-md text-gray-700 hover:bg-gray-50">
+                <Share2 size={20} />
+              </button> */}
+            </div>
+          </div>
+
+          {/* <div className="text-sm text-gray-500">
+            <p>Livraison gratuite à partir de 20.000 Fcfa</p>
+            <p>Retours acceptés sous 14 jours</p>
+          </div> */}
+        </div>
+      </div>
+
+      {/* Produits similaires */}
+      <div className="mt-16">
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Produits similaires</h2>
+        <div className="flex w-full gap-6 flex-wrap justify-center">
+  {relatedProducts.map((product) => (
+    <div 
+      key={product.id} 
+      className="w-80 h-[420px] bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col"
+    >
+      <div className="relative w-full h-56">
+        <Image 
+          src={product.image}
+          alt={product.name}
+          fill
+          className="object-cover"
+        />
+      </div>
+      <div className="p-4 flex flex-col flex-1 justify-between">
+        <h3 className="font-medium text-lg text-gray-900 mb-2">{product.name}</h3>
+        <p className="text-gray-900 font-bold text-xl">{product.price.toLocaleString()} Fcfa</p>
+      </div>
+    </div>
+  ))}
+</div>
+
       </div>
     </div>
   );

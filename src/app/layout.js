@@ -1,8 +1,12 @@
+'use client';
+
 import { Geist, Geist_Mono } from "next/font/google";
+import { usePathname } from "next/navigation";
 import "./globals.css";
 import Header from "../app/components/Header";
 import Footer from "../app/components/Footer";
 import FloatingWhatsApp from "../app/components/FloatingWhatsApp";
+import { CartProvider } from '../context/CartContext';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,25 +18,33 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
-  title: "ARTIZ",
-  description: "Site artisanal gabonais",
-  icons: {
-    icon: "/LOGO .png",
-  },
-};
-
 export default function RootLayout({ children }) {
+  const pathname = usePathname();
+  const isAdmin = pathname?.startsWith("/admin");
+
+  if (isAdmin) {
+    return (
+      <html lang="fr">
+        <body className={`${geistSans.variable} ${geistMono.variable}`}>
+          {children}
+        </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="fr">
       <head>
         <link rel="icon" href="/logo.png" type="image/png" sizes="32x32" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Header />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
-        <FloatingWhatsApp />
+        {/* Le CartProvider doit envelopper tout le contenu de l'application */}
+        <CartProvider>
+          <Header />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+          <FloatingWhatsApp />
+        </CartProvider>
       </body>
     </html>
   );

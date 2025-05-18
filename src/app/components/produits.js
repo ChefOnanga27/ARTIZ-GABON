@@ -20,7 +20,7 @@
 //       oldPrice: 7500,
 //       discount: 10,
 //       reviews: 97,
-//     },
+    
 //     {
 //       id: "produit-mystere-002",
 //       name: "Produit mystère",

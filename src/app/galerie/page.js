@@ -48,6 +48,12 @@ const cards = [
     items: "Dance like nobody's watching",
     image: "/fille.jpeg",
   },
+  {
+    title: "Singe Mendril",
+    label: "Artist",
+    items: "78 items",
+    image: "/singe.jpeg",
+  },
 ];
 
 const handleDownload = async (imagePath) => {
@@ -87,7 +93,7 @@ export default function ArtworksPage() {
             </p>
             <div className="mt-6 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
               <button className="bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-full font-medium backdrop-blur-sm transition">
-                Voir la galerie
+                Explorez
               </button>
             </div>
           </div>
@@ -105,40 +111,40 @@ export default function ArtworksPage() {
           </p>
         </div>
 
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {cards.map((card, index) => (
-            <div
-              key={index}
-              className="relative overflow-hidden rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
-            >
-              <div className="relative h-64 md:h-72">
-                <img
-                  src={card.image}
-                  alt={card.title}
-                  className="w-full h-full object-cover rounded-xl"
-                />
 
-                <button
-                  onClick={() => handleDownload(card.image)}
-                  className="absolute top-3 right-3 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition"
-                  title="Télécharger l’image"
-                >
-                  <FiDownload size={18} />
-                </button>
+   <div className="flex flex-wrap gap-4">
+  {cards.map((card, index) => (
+    <div
+      key={index}
+      className="w-full sm:w-[48%] md:w-[31%] aspect-[4/3] relative overflow-hidden rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
+    >
+      <img
+        src={card.image}
+        alt={card.title}
+        className="w-full h-full object-cover"
+      />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-4 flex flex-col justify-end">
-                  <span className="text-xs text-white bg-blue-600 rounded-full px-3 py-1 w-fit mb-2">
-                    {card.label}
-                  </span>
-                  <h2 className="text-white text-lg font-semibold">{card.title}</h2>
-                  {card.items && (
-                    <p className="text-sm text-white/80 mt-1">{card.items}</p>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+      <button
+        onClick={() => handleDownload(card.image)}
+        className="absolute top-3 right-3 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition"
+        title="Télécharger l’image"
+      >
+        <FiDownload size={18} />
+      </button>
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-4 flex flex-col justify-end">
+        <span className="text-xs text-white bg-blue-600 rounded-full px-3 py-1 w-fit mb-2">
+          {card.label}
+        </span>
+        <h2 className="text-white text-lg font-semibold">{card.title}</h2>
+        {card.items && (
+          <p className="text-sm text-white/80 mt-1">{card.items}</p>
+        )}
+      </div>
+    </div>
+  ))}
+</div>
+
       </div>
     </div>
   );

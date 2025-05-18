@@ -1,12 +1,16 @@
-"use client";
+'use client';
 import { useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { FiShoppingCart } from "react-icons/fi";
 import { HiOutlineMenu, HiX } from "react-icons/hi";
 import Image from "next/image";
+import Link from "next/link"; // Assurez-vous d'importer Link de next
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Simuler un panier avec un tableau d'articles, à remplacer par la gestion réelle de ton panier
+  const cart = [1, 2]; // Exemple de tableau d'articles dans le panier (remplace avec ton état réel)
 
   return (
     <header className="w-full border-b border-gray-200 bg-white">
@@ -23,30 +27,35 @@ export default function Header() {
           />
         </div>
         <nav className="hidden md:flex justify-center space-x-10 py-4 text-base md:text-lg font-semibold text-gray-900 bg-white">
-  <a 
-    href="/" 
-    className="relative px-4 py-2 transition-all duration-300 hover:text-shadow-slate-600 hover:drop-shadow-[0_0_15px_rgba(249,115,22,0.5)]"
-  >
-    Accueil
-  </a>
-  <a 
-    href="/categorie" 
-    className="relative px-4 py-2 transition-all duration-300 hover:text-shadow-slate-600 hover:drop-shadow-[0_0_15px_rgba(249,115,22,0.5)]"
-  >
-    Produits
-  </a>
-  <a 
-    href="/muse" 
-    className="relative px-4 py-2 transition-all duration-300 hover:text-shadow-slate-600 hover:drop-shadow-[0_0_15px_rgba(249,115,22,0.5)]"
-  >
-    Espace Musée
-  </a>
-</nav>
+          <a 
+            href="/" 
+            className="relative px-4 py-2 transition-all duration-300 hover:text-shadow-slate-600 hover:drop-shadow-[0_0_15px_rgba(249,115,22,0.5)]"
+          >
+            Accueil
+          </a>
+          <a 
+            href="/categorie" 
+            className="relative px-4 py-2 transition-all duration-300 hover:text-shadow-slate-600 hover:drop-shadow-[0_0_15px_rgba(249,115,22,0.5)]"
+          >
+            Produits
+          </a>
+          <a 
+            href="/muse" 
+            className="relative px-4 py-2 transition-all duration-300 hover:text-shadow-slate-600 hover:drop-shadow-[0_0_15px_rgba(249,115,22,0.5)]"
+          >
+            Espace Musée
+          </a>
+        </nav>
 
         {/* Icônes + menu burger */}
         <div className="flex items-center space-x-6 md:space-x-10 text-2xl md:text-3xl">
-          {/* Icônes panier et user */}
-          <FiShoppingCart className="text-gray-800" size={28} />
+          {/* Lien vers le panier avec le nombre d'articles */}
+          <Link href="/panier" className="panier-link text-gray-800 flex items-center">
+            <FiShoppingCart size={28} />
+            <span className="ml-2 text-sm text-gray-600">({cart.length})</span>
+          </Link>
+
+          {/* Icône utilisateur */}
           <FaUser className="text-gray-800" size={28} />
 
           {/* Menu hamburger visible uniquement sur mobile */}
@@ -71,9 +80,6 @@ export default function Header() {
           <a href="/muse" className="hover:underline" onClick={() => setIsMenuOpen(false)}>Espace Musée</a>
         </nav>
       )}
-
-      {/* Menu desktop */}
-    
     </header>
   );
 }

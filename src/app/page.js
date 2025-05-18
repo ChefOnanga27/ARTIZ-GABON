@@ -9,6 +9,7 @@ import ProductCardWithGrid from "./components/ProductCardWithGrid";
 import { FaTruck, FaCreditCard, FaLock, FaPhone } from "react-icons/fa";
 import ContactForm from "./components/ContactForm";
 import Loader from "./components/Loader";
+import HeroCarousel from "./components/HeroCarousel";
 
 const categories = [
   { src: "/d1.png", alt: "Décoration" },
@@ -125,47 +126,7 @@ const testimonials = [
   }
 ];
 
-const FormOverlay = ({ handleClose }) => (
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    className="fixed inset-0 flex items-center justify-center z-50"
-  >
-    <div className="bg-transparent bg-opacity-20 backdrop-blur-sm p-6 rounded-lg w-full max-w-md">
-      <h2 className="font-bold text-3xl text-center mb-4">Formulaire d'inscription</h2>
-      <form className="flex flex-col space-y-4">
-        <input
-          type="text"
-          placeholder="Nom"
-          className="p-2 rounded bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="email"
-          placeholder="E-mail"
-          className="p-2 rounded bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="password"
-          placeholder="Mot de passe"
-          className="p-2 rounded bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white p-2 rounded font-semibold hover:bg-blue-700 transition"
-        >
-          Soumettre
-        </button>
-      </form>
-      <button
-        onClick={handleClose}
-        className="mt-4 text-blue-600 underline block mx-auto"
-      >
-        Fermer
-      </button>
-    </div>
-  </motion.div>
-);
+
 
 export default function HomePage() {
   const [index, setIndex] = useState(0);
@@ -203,8 +164,9 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative h-screen w-full flex items-center justify-center bg-cover bg-center">
-  <Image
+      <section className="r">
+      <HeroCarousel />
+  {/* <Image
     src="/image.png"
     alt="Background"
     fill
@@ -245,7 +207,7 @@ export default function HomePage() {
     >
       Inscrivez-vous maintenant
     </motion.button>
-  </div>
+  </div> */}
 </section>
 
 
@@ -254,7 +216,6 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto px-4">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-3xl font-bold">Catégories</h2>
-            <button className="text-blue-600 hover:underline">Voir plus</button>
           </div>
 
           <div className="relative">
@@ -299,8 +260,8 @@ export default function HomePage() {
         </div>
       </section>
       
-      <div className="p-3 bg-stone-600">
-        <div className="gap-6 place-items-center flex justify-center">
+      <div className="p-8 ">
+        <div className="gap-6 w-full place-items-center flex justify-center">
           <BestSellerCard product={bestSellers[0]} />
         </div>
       </div>
@@ -336,19 +297,26 @@ export default function HomePage() {
         </div>
       </section>
     
-      <section className="bg-gray-100 py-10" style={{ backgroundImage: "url('/font.png')" }}>
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-            {services.map((service, index) => (
-              <div key={index} className="flex flex-col items-center space-y-3">
-                <div className="text-black">{service.icon}</div>
-                <h3 className="text-lg font-semibold">{service.title}</h3>
-                <p className="text-gray-600 text-sm">{service.description}</p>
-              </div>
-            ))}
-          </div>
+      <section
+  className="bg-gray-100 py-5"
+  style={{ backgroundImage: "url('/font.png')" }}
+>
+  <div className="container mx-auto px-4">
+    <div className="flex flex-nowrap justify-between items-stretch text-center gap-6">
+      {services.map((service, index) => (
+        <div
+          key={index}
+          className="flex-1 flex flex-col items-center justify-between  p-6 rounded-lg shadow-md space-y-3"
+        >
+          <div className="text-black text-3xl">{service.icon}</div>
+          <h3 className="text-lg font-semibold">{service.title}</h3>
+          <p className="text-gray-600 text-sm">{service.description}</p>
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
+
 
       <section className="py-10 px-6">
         <div className="max-w-6xl mx-auto">
@@ -362,9 +330,9 @@ export default function HomePage() {
             Nos missions
           </motion.h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="flex md:grid-cols-2 gap-3">
             <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+              className="flex sm:grid-cols-2 gap-6"
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
@@ -384,20 +352,6 @@ export default function HomePage() {
                 </motion.div>
               ))}
             </motion.div>
-
-            <motion.div
-              className="flex justify-center"
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <img
-                src="/tisse.png"
-                alt="Artisanat Gabonais"
-                className="rounded-lg w-full max-w-sm object-cover"
-              />
-            </motion.div>
           </div>
         </div>
       </section>
@@ -415,7 +369,7 @@ export default function HomePage() {
             Ce que disent nos clients et artisans
           </motion.h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="flex gap-3">
             {testimonials.map((testimonial, index) => (
               <motion.div
                 key={index}
