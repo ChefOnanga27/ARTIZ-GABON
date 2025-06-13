@@ -1,25 +1,24 @@
 'use client';
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from 'react';
 import { X } from 'lucide-react';
 
 export default function CategorieForm({ closeForm }) {
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [categoryName, setCategoryName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const modalRef = useRef(null);
 
-  // Gérer la fermeture avec Escape
+  // Fermer le formulaire avec la touche ESC
   useEffect(() => {
     function handleKeyDown(event) {
-      if (event.key === 'Escape') {
-        closeForm();
-      }
+      if (event.key === 'Escape') closeForm();
     }
-
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [closeForm]);
 
-  // Empêcher le scroll du body quand le modal est ouvert
+  // Empêcher le scroll de fond pendant l'affichage du modal
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -27,56 +26,91 @@ export default function CategorieForm({ closeForm }) {
     };
   }, []);
 
-  const handleSubmit = (e) => {
+  // Envoi du formulaire
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (selectedCategory.trim() === "") return;
-    console.log("Nouvelle catégorie créée :", selectedCategory);
-    setSelectedCategory("");
-    closeForm(); // Fermer après soumission
+    if (categoryName.trim() === '') return;
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        setError("Token d'authentification manquant. Veuillez vous connecter.");
+        setLoading(false);
+        return;
+      }
+
+      const response = await fetch('https://artiz-1ly2.onrender.com/api/categorie', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Ajout du token ici
+        },
+        body: JSON.stringify({ nom: categoryName }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.error || data?.message || 'Erreur lors de la création de la catégorie');
+      }
+
+      console.log('Catégorie créée :', data);
+      alert('Catégorie créée avec succès !');
+      setCategoryName('');
+      closeForm();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div 
+    <div
       ref={modalRef}
       onClick={(e) => e.target === modalRef.current && closeForm()}
-      className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center p-4 z-50"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-sm"
     >
-      <form 
-        onSubmit={handleSubmit} 
-        className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md relative animate-fade-in"
+      <form
+        onSubmit={handleSubmit}
+        className="relative w-full max-w-md p-8 bg-white rounded-xl shadow-lg animate-fade-in"
       >
-        <div className="flex justify-between items-center mb-6">
+        {/* En-tête */}
+        <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-gray-900">Créer une catégorie</h2>
           <button
             type="button"
             onClick={closeForm}
-            className="text-gray-500 hover:text-gray-700 transition-colors"
             aria-label="Fermer"
+            className="text-gray-500 transition-colors hover:text-gray-700"
           >
             <X size={24} />
           </button>
         </div>
 
+        {/* Champ de formulaire + erreurs */}
         <div className="flex flex-col space-y-6">
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+          <input
+            type="text"
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)}
+            placeholder="Nom de la catégorie"
             required
-          >
-            <option value="">Sélectionner une catégorie</option>
-            <option value="tech">Technologie</option>
-            <option value="science">Science</option>
-            <option value="art">Art</option>
-            <option value="sports">Sports</option>
-            <option value="literature">Littérature</option>
-          </select>
+            className="px-4 py-3 text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          {error && <p className="text-sm text-red-600">{error}</p>}
 
           <button
             type="submit"
-            className="bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            disabled={loading}
+            className="py-3 font-medium text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-60"
           >
-            Créer la catégorie
+            {loading ? 'Création en cours…' : 'Créer la catégorie'}
           </button>
         </div>
       </form>

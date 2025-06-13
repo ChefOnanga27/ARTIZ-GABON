@@ -1,26 +1,37 @@
 'use client';
 import { MoreVertical, CheckCircle, RefreshCw, XCircle, Search, PlusCircle, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function OrdersPage() {
-  // État des commandes
-  const [orders, setOrders] = useState([
-    { id: 1, client: 'Jean Dupont', date: '25/04/2023', amount: 6750, status: 'en cours', items: 3 },
-    { id: 2, client: 'Marie Curie', date: '24/04/2023', amount: 12500, status: 'livré', items: 2 },
-    { id: 3, client: 'Albert Einstein', date: '23/04/2023', amount: 8500, status: 'annulé', items: 1 },
-    { id: 4, client: 'Ada Lovelace', date: '22/04/2023', amount: 15000, status: 'en cours', items: 4 },
-  ]);
-
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeMenu, setActiveMenu] = useState(null);
 
+  useEffect(() => {
+    async function fetchOrders() {
+      try {
+        setLoading(true);
+        const res = await fetch('https://artiz-1ly2.onrender.com/api/commandes');
+        if (!res.ok) throw new Error('Erreur lors de la récupération des commandes');
+        const data = await res.json();
+        setOrders(data);
+      } catch (error) {
+        console.error(error);
+        setOrders([]); // en cas d'erreur, tableau vide
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchOrders();
+  }, []);
+
   // Filtrer les commandes
   const filteredOrders = orders.filter(order =>
-    order.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.status.toLowerCase().includes(searchTerm.toLowerCase())
+    order.client?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.status?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Icônes de statut
   const getStatusIcon = (status) => {
     switch (status) {
       case 'livré': return <CheckCircle className="w-4 h-4 mr-1 text-green-500" />;
@@ -29,7 +40,6 @@ export default function OrdersPage() {
     }
   };
 
-  // Changer le statut
   const updateStatus = (id, newStatus) => {
     setOrders(orders.map(order => 
       order.id === id ? { ...order, status: newStatus } : order
@@ -37,20 +47,17 @@ export default function OrdersPage() {
     setActiveMenu(null);
   };
 
-  // Supprimer commande
   const deleteOrder = (id) => {
     setOrders(orders.filter(order => order.id !== id));
     setActiveMenu(null);
   };
 
-  // Toggle menu
   const toggleMenu = (id) => {
     setActiveMenu(activeMenu === id ? null : id);
   };
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      {/* En-tête */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Gestion des Commandes</h1>
         <div className="relative">
@@ -65,7 +72,6 @@ export default function OrdersPage() {
         </div>
       </div>
 
-      {/* Tableau principal */}
       <div className="bg-white rounded-xl shadow-md overflow-hidden">
         <div className="p-4 bg-gray-50 border-b flex justify-between items-center">
           <h2 className="text-xl font-semibold">Liste des Commandes ({orders.length})</h2>
@@ -87,58 +93,65 @@ export default function OrdersPage() {
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
+
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredOrders.map((order) => (
-                <tr key={order.id} className="hover:bg-gray-50 transition-colors">
-                  {/* Colonnes données */}
-                  <td className="px-6 py-4 whitespace-nowrap font-medium">{order.client}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-500">{order.date}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{order.items} article(s)</td>
-                  <td className="px-6 py-4 whitespace-nowrap font-medium">{order.amount.toLocaleString()} Fcfa</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center capitalize">
-                      {getStatusIcon(order.status)}
-                      {order.status}
-                    </div>
-                  </td>
-                  
-                  {/* Menu actions */}
-                  <td className="px-6 py-4 whitespace-nowrap text-right relative">
-                    <button onClick={() => toggleMenu(order.id)} className="text-gray-400 hover:text-gray-600">
-                      <MoreVertical size={18} />
-                    </button>
-                    
-                    {activeMenu === order.id && (
-                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
-                        <div className="py-1">
-                          <button onClick={() => updateStatus(order.id, 'en cours')} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full">
-                            <RefreshCw size={16} className="mr-2 text-blue-500" />
-                            En cours
-                          </button>
-                          <button onClick={() => updateStatus(order.id, 'livré')} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full">
-                            <CheckCircle size={16} className="mr-2 text-green-500" />
-                            Livré
-                          </button>
-                          <button onClick={() => updateStatus(order.id, 'annulé')} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full">
-                            <XCircle size={16} className="mr-2 text-red-500" />
-                            Annuler
-                          </button>
-                          <button onClick={() => deleteOrder(order.id)} className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full border-t border-gray-200">
-                            <Trash2 size={16} className="mr-2" />
-                            Supprimer
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </td>
+              {loading ? (
+                <tr>
+                  <td colSpan="6" className="text-center py-6 text-gray-500">Chargement...</td>
                 </tr>
-              ))}
+              ) : filteredOrders.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="text-center py-6 text-gray-500">Aucune commande</td>
+                </tr>
+              ) : (
+                filteredOrders.map((order) => (
+                  <tr key={order.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap font-medium">{order.client}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-500">{order.date}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{order.items} article(s)</td>
+                    <td className="px-6 py-4 whitespace-nowrap font-medium">{order.amount.toLocaleString()} Fcfa</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center capitalize">
+                        {getStatusIcon(order.status)}
+                        {order.status}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right relative">
+                      <button onClick={() => toggleMenu(order.id)} className="text-gray-400 hover:text-gray-600">
+                        <MoreVertical size={18} />
+                      </button>
+
+                      {activeMenu === order.id && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                          <div className="py-1">
+                            <button onClick={() => updateStatus(order.id, 'en cours')} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full">
+                              <RefreshCw size={16} className="mr-2 text-blue-500" />
+                              En cours
+                            </button>
+                            <button onClick={() => updateStatus(order.id, 'livré')} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full">
+                              <CheckCircle size={16} className="mr-2 text-green-500" />
+                              Livré
+                            </button>
+                            <button onClick={() => updateStatus(order.id, 'annulé')} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full">
+                              <XCircle size={16} className="mr-2 text-red-500" />
+                              Annuler
+                            </button>
+                            <button onClick={() => deleteOrder(order.id)} className="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full border-t border-gray-200">
+                              <Trash2 size={16} className="mr-2" />
+                              Supprimer
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* Statistiques */}
       <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 mt-8">
         <h3 className="text-lg font-medium text-blue-800 mb-4">Résumé des commandes</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

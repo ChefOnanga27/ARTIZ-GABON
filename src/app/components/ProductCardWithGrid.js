@@ -1,40 +1,51 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { AiOutlineHeart } from "react-icons/ai";
-
 import AddToCartButton from "./AddToCartButton";
 
-const ProductCardWithGrid = ({ title = "Nos articles", customProducts = null, selectedProduct = null }) => {
+const isImageUrl = (url) =>
+  typeof url === "string" &&
+  (url.endsWith(".jpg") || url.endsWith(".jpeg") || url.endsWith(".png") || url.endsWith(".webp"));
+
+const ProductCardWithGrid = ({
+  title = "Nos articles",
+  customProducts = null,
+  selectedProduct = null,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [fetchedProducts, setFetchedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const defaultProducts = [
-    { id: "masque-bois-001", name: "Masque en bois", category: "masque", image: "/1.jpg", price: 6750, reviews: 97 },
-    { id: "produit-mystere-002", name: "Produit mystère", category: "divers", image: "/b3.png", price: 2500, reviews: 89 },
-    { id: "boisson-003", name: "Boisson traditionnelle", category: "boisson", image: "/boisson1.png", price: 2500, reviews: 110 },
-    { id: "decoration-004", name: "Décoration artisanale", category: "décoration", image: "/d1.png", price: 20000, reviews: 76 },
-    { id: "cosmetique-005", name: "Cosmétique naturel", category: "cosmétique", image: "/g1.png", price: 18500, reviews: 102 },
-    { id: "huile-006", name: "Huile essentielle", category: "huile", image: "/h1.png", price: 8000, reviews: 135 },
-    { id: "gingembre-007", name: "Gingembre bio", category: "épicerie", image: "/gin1.png", price: 10000, reviews: 92 },
-    { id: "infusion-008", name: "Infusion médicinale", category: "infusion", image: "/inf5.png", price: 10000, reviews: 113 },
-    
-  ];
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("https://artiz-1ly2.onrender.com/api/admin/articles");
+        const data = await res.json();
+        setFetchedProducts(data);
+      } catch (error) {
+        console.error("Erreur lors du chargement des produits :", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const products = customProducts || defaultProducts;
+    fetchProducts();
+  }, []);
+
+  const products = customProducts || fetchedProducts || [];
 
   let filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    product.nom?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Si un produit sélectionné est passé, filtrer pour afficher uniquement les produits similaires (même catégorie, autre id)
   if (selectedProduct) {
     filteredProducts = products.filter(
       (product) =>
-        product.category === selectedProduct.category &&
-        product.id !== selectedProduct.id
+        product.categorie === selectedProduct.categorie &&
+        (product._id || product.id) !== (selectedProduct._id || selectedProduct.id)
     );
   }
 
@@ -51,50 +62,68 @@ const ProductCardWithGrid = ({ title = "Nos articles", customProducts = null, se
         </motion.h2>
       )}
 
-      <div className="flex flex-wrap gap-6 justify-center">
-        {filteredProducts.map((product) => (
-          <motion.div
-            key={product.id}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="w-[280px] h-[360px] border border-gray-300 shadow-md flex flex-col bg-white transition-all"
-            >
-              <div className="w-[280px] h-[360px] border border-gray-300 shadow-md flex flex-col bg-white transition-all overflow-hidden">
-                <Link href={`/produits/${product.id}`} className="flex flex-col h-full">
-                  <motion.div whileHover={{ scale: 1.05 }} className="relative w-full h-[200px]">
-                    <Image src={product.image} alt={product.name} fill className="object-cover" />
-                  </motion.div>
+      {loading ? (
+        <p>Chargement des produits...</p>
+      ) : (
+        <div className="flex flex-wrap gap-6 justify-center">
+          {filteredProducts.map((product) => {
+            const imageUrl =
+              isImageUrl(product.images?.[0]) && product.images[0].startsWith("http")
+                ? product.images[0]
+                : "/placeholder.jpg";
 
-                  <div className="flex flex-col justify-between flex-1 p-4 text-center">
-                    <div>
-                      <h3 className="font-semibold text-base line-clamp-2">{product.name}</h3>
-                      <div className="flex justify-center gap-1 text-yellow-500 mt-1">
-                        {[...Array(5)].map((_, i) => (
-                          <span key={i}>⭐</span>
-                        ))}
-                        <span className="text-gray-500 text-xs ml-1">({product.reviews})</span>
+            return (
+              <motion.div
+                key={product._id || product.id}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+              >
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="w-[280px] h-[360px] border border-gray-300 shadow-md flex flex-col bg-white transition-all"
+                >
+                  <div className="w-[280px] h-[360px] flex flex-col overflow-hidden">
+                    <Link href={`/produits/${product._id || product.id}`} className="flex flex-col h-full">
+                      <motion.div whileHover={{ scale: 1.05 }} className="relative w-full h-[200px]">
+                        <Image
+                          src={imageUrl}
+                          alt={product.nom || "Produit"}
+                          fill
+                          className="object-cover"
+                        />
+                      </motion.div>
+
+                      <div className="flex flex-col justify-between flex-1 p-4 text-center">
+                        <div>
+                          <h3 className="font-semibold text-base line-clamp-2">{product.nom}</h3>
+                          <div className="flex justify-center gap-1 text-yellow-500 mt-1">
+                            {[...Array(5)].map((_, i) => (
+                              <span key={i}>⭐</span>
+                            ))}
+                            <span className="text-gray-500 text-xs ml-1">
+                              ({product.reviews || 0})
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="mt-2">
+                          <p className="font-bold">{product.prix} Fcfa</p>
+                        </div>
+
+                        <div className="flex flex-col gap-3 mt-4 items-center">
+                          <AddToCartButton onClick={() => console.log(`Ajouté ${product.nom} au panier`)} />
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="mt-2">
-                      <p className="font-bold">{product.price} Fcfa</p>
-                    </div>
-
-                    <div className="flex flex-col gap-3 mt-4 items-center">
-                      <AddToCartButton onClick={() => console.log(`Ajouté ${product.name} au panier`)} />
-                    </div>
+                    </Link>
                   </div>
-                </Link>
-              </div>
-            </motion.div>
-          </motion.div>
-        ))}
-      </div>
+                </motion.div>
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

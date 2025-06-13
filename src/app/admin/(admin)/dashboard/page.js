@@ -1,7 +1,27 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { CheckCircle, XCircle, Clock } from 'lucide-react';
 import StatCard from '../components/StatCard';
 
 export default function DashboardPage() {
+  const [productCount, setProductCount] = useState(null);
+
+
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const res = await fetch('https://artiz-1ly2.onrender.com/api/admin/articles');
+        const data = await res.json();
+        setProductCount(data.length); // si la réponse est un tableau d'articles
+      } catch (error) {
+        console.error('Erreur lors de la récupération des produits:', error);
+      }
+    }
+
+    fetchProducts();
+  }, []);
+
   const commandes = [
     { nom: 'Jean Dupont', montant: '120 Fcfa', statut: 'En cours', date: '25/04/2025' },
     { nom: 'Marie Curie', montant: '300 Fcfa', statut: 'Livré', date: '24/04/2025' },
@@ -22,20 +42,19 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6 p-4 sm:p-6">
-      {/* Statistiques - responsive grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        <StatCard title="Produits" value="120" icon="📦" />
+      {/* Statistiques */}
+      <div className="flex w-20 gap-4 sm:gap-6">
+        <StatCard title="Produits" value={productCount !== null ? productCount.toString() : '...'} icon="📦" />
         <StatCard title="Commandes" value="45" icon="🛒" />
         <StatCard title="Utilisateurs" value="15" icon="👤" />
       </div>
 
-      {/* Tableau des dernières commandes - responsive */}
+      {/* Commandes */}
       <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 sm:mb-6 text-gray-800">
           Dernières Commandes
         </h2>
-        
-        {/* Table responsive avec scroll horizontal sur mobile */}
+
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">

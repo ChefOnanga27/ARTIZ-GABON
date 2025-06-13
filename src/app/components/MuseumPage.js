@@ -8,11 +8,11 @@ export default function MuseumPage() {
   ];
 
   return (
-    <div>
+    <div className="bg-black">
       {/* Section Expositions */}
-      <section className="bg-black py-16 text-center">
-  <h2 className="text-3xl font-bold text-white mb-12">Expositions</h2>
-  <div className=" flex gap-6 px-8  pb-4">
+      <section className="bg-black py-16 text-center ml-6">
+  <h2 className="text-4xl font-bold text-white mb-12">Expositions</h2>
+  <div className=" flex gap-5 px-8 flex-col sm:flex-row pb-4">
     {exhibitions.map((expo, index) => (
       <div 
         key={index} 
@@ -36,10 +36,11 @@ export default function MuseumPage() {
       {/* Section Mariage Coutumier */}
       <section className="relative h-screen bg-black text-white flex items-center justify-start">
         <Image
-          src="/maria.jpg"
+          // src="/maria.jpg"
+           src="/imm.png"
           alt="Parcours permanent"
           fill
-          className="object-cover z-0"
+          className="object-cover z-10 object-[30%_30%]"
         />
         <div className="absolute inset-0 bg-black/40 z-10" />
         <div className="relative z-20 max-w-4xl ml-23 px-6 md:px-12">

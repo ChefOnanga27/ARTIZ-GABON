@@ -13,7 +13,7 @@ export default function Header() {
   const cart = [1, 2]; // Exemple de tableau d'articles dans le panier (remplace avec ton état réel)
 
   return (
-    <header className="w-full border-b border-gray-200 bg-white">
+    <header className="w-full border-b border-gray-200 h-28 bg-white">
       <div className="flex items-center justify-between px-4 py-4 md:px-6 md:py-5">
         {/* Logo */}
         <div>

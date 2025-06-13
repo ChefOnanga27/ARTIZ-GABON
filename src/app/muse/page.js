@@ -118,71 +118,73 @@ export default function Home() {
       </div>
 
       {/* Section Projets avec animation */}
-      <section className="py-12 bg-gray-300 ">
-        <div className="max-w-6xl mx-auto p-6">
-          <h2 className="text-3xl font-bold mb-20 text-center">
-            Histoire des masques Gabonais
-          </h2>
+      <section className="py-8 bg-gray-300">
+  <div className="max-w-6xl mx-auto px-4">
+    <h2 className="text-3xl font-bold mb-8 text-center">
+      Histoire des masques Gabonais
+    </h2>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8 }}
-              className="relative"
-            >
-              <Image
-                src="/pu.jpg"
-                alt="Objets Parlants"
-                width={600}
-                height={400}
-                className="rounded-lg shadow-lg"
-              />
-              <div className="absolute bottom-0 bg-white p-4">
-                <h3 className="font-bold text-lg">
-                  Histoire du Masque disponible pour vous !
-                </h3>
-                <p>
-                  Le masque fang est un masque en bois exotique blanchi au
-                  kaolin issu de l'art traditionnel du Gabon.
-                </p>
-                <button className="mt-2 bg-black text-white px-4 py-2 rounded">
-                  Voir plus
-                </button>
-              </div>
-            </motion.div>
-
-            <div className="space-y-6">
-              {projects.map((project, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.2 }}
-                  className="flex space-x-4 items-center bg-white p-4 rounded-lg shadow-lg hover:scale-105 transition-transform"
-                >
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    width={80}
-                    height={80}
-                    className="rounded-lg"
-                  />
-                  <div>
-                    <p className="text-gray-500">{project.date}</p>
-                    <h3 className="font-bold text-lg">{project.title}</h3>
-                    <p className="text-gray-700">{project.description}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+    <div className="grid md:grid-cols-2 gap-4 items-start">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6 }}
+        className="relative rounded-lg shadow-lg overflow-hidden"
+      >
+        <Image
+          src="/pu.jpg"
+          alt="Objets Parlants"
+          width={600}
+          height={400}
+          className="rounded-lg"
+        />
+        <div className="absolute bottom-0 left-0 right-0 bg-white/90 p-2">
+          <h3 className="font-bold text-lg mb-1">
+            Histoire du Masque disponible pour vous !
+          </h3>
+          <p className="text-sm">
+            Le masque fang est un masque en bois exotique blanchi au kaolin issu de l'art traditionnel du Gabon.
+          </p>
+          <button className="mt-2 bg-black text-white px-4 py-1.5 text-sm rounded">
+            Voir plus
+          </button>
         </div>
-      </section>
+      </motion.div>
+
+      <div className="space-y-4">
+        {projects.map((project, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.2 }}
+            className="flex space-x-4 items-start bg-white p-3 rounded-lg shadow hover:scale-[1.02] transition-transform"
+          >
+            <Image
+              src={project.image}
+              alt={project.title}
+              width={70}
+              height={70}
+              className="rounded-lg"
+            />
+            <div className="text-sm">
+              <p className="text-gray-500">{project.date}</p>
+              <h3 className="font-bold text-base">{project.title}</h3>
+              <p className="text-gray-700">{project.description}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
 
       {/* Sections supplémentaires */}
       <MuseumPage />
-      <ResourcesSection />
+      <div className="mt-6 "> {/* Ajoute un espace vertical de 4rem (~64px) */}
+       <ResourcesSection />
+      </div>
       
       <ArticlesSection />
       <EventsSection />

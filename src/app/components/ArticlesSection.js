@@ -72,7 +72,7 @@ export default function ArticlesSection() {
         </p>
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto flex gap-6 px-4">
+      <div className="relative z-10 max-w-6xl mx-auto flex  flex-col md:flex-row gap-6 px-4">
         {articles.map((article, index) => (
           <motion.div
             key={index}

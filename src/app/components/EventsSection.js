@@ -29,7 +29,7 @@ export default function EventsSection() {
       <div className="max-w-6xl mx-auto px-4">
         <h2 className="text-3xl font-bold text-center">Culture gabonaise</h2>
         
-        <div className="mt-8 flex gap-6">
+        <div className="mt-8 flex gap-6 flex-col md:flex-row">
           {events.map((event, index) => (
             <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
               <img 

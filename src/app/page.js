@@ -330,29 +330,21 @@ export default function HomePage() {
             Nos missions
           </motion.h2>
           
-          <div className="flex md:grid-cols-2 gap-3">
-            <motion.div
-              className="flex sm:grid-cols-2 gap-6"
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              {missions.map((mission, index) => (
-                <motion.div
-                  key={index}
-                  className="bg-white p-6 rounded-lg shadow-md border border-gray-200"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: index * 0.2 }}
-                  viewport={{ once: true }}
-                >
-                  <h3 className="text-lg font-semibold">{mission.title}</h3>
-                  <p className="text-gray-600 text-sm mt-2">{mission.description}</p>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
+          <div className="flex gap-6">
+  {missions.map((mission, index) => (
+    <motion.div
+      key={index}
+      className="bg-white p-6 rounded-lg shadow-md border border-gray-200"
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, delay: index * 0.2 }}
+      viewport={{ once: true }}
+    >
+      <h3 className="text-lg font-semibold">{mission.title}</h3>
+      <p className="text-gray-600 text-sm mt-2">{mission.description}</p>
+    </motion.div>
+  ))}
+</div>
         </div>
       </section>
 
