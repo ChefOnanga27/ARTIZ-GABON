@@ -297,16 +297,16 @@ export default function HomePage() {
         </div>
       </section>
     
-      <section
+ <section
   className="bg-gray-100 py-5"
   style={{ backgroundImage: "url('/font.png')" }}
 >
   <div className="container mx-auto px-4">
-    <div className="flex flex-nowrap justify-between items-stretch text-center gap-6">
+    <div className="flex flex-col md:flex-row justify-between items-stretch text-center gap-6">
       {services.map((service, index) => (
         <div
           key={index}
-          className="flex-1 flex flex-col items-center justify-between  p-6 rounded-lg shadow-md space-y-3"
+          className="flex-1 flex flex-col items-center justify-between p-6 rounded-lg shadow-md space-y-3 w-full"
         >
           <div className="text-black text-3xl">{service.icon}</div>
           <h3 className="text-lg font-semibold">{service.title}</h3>
@@ -318,80 +318,85 @@ export default function HomePage() {
 </section>
 
 
-      <section className="py-10 px-6">
-        <div className="max-w-6xl mx-auto">
-          <motion.h2
-            className="text-3xl font-bold mb-8 text-center"
-            initial={{ opacity: 0, y: -20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            Nos missions
-          </motion.h2>
-          
-          <div className="flex gap-6">
-  {missions.map((mission, index) => (
-    <motion.div
-      key={index}
-      className="bg-white p-6 rounded-lg shadow-md border border-gray-200"
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5, delay: index * 0.2 }}
+
+     <section className="py-10 px-6">
+  <div className="max-w-6xl mx-auto">
+    <motion.h2
+      className="text-3xl font-bold mb-8 text-center"
+      initial={{ opacity: 0, y: -20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
       viewport={{ once: true }}
     >
-      <h3 className="text-lg font-semibold">{mission.title}</h3>
-      <p className="text-gray-600 text-sm mt-2">{mission.description}</p>
-    </motion.div>
-  ))}
-</div>
-        </div>
-      </section>
+      Nos missions
+    </motion.h2>
+
+    <div className="flex flex-col md:flex-row gap-6">
+      {missions.map((mission, index) => (
+        <motion.div
+          key={index}
+          className="bg-white p-6 rounded-lg shadow-md border border-gray-200 w-full md:flex-1"
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: index * 0.2 }}
+          viewport={{ once: true }}
+        >
+          <h3 className="text-lg font-semibold">{mission.title}</h3>
+          <p className="text-gray-600 text-sm mt-2">{mission.description}</p>
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</section>
+
 
       {/* Nouvelle Section Témoignages */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4">
-          <motion.h2 
-            className="text-3xl font-bold text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            Ce que disent nos clients et artisans
-          </motion.h2>
-          
-          <div className="flex gap-3">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={index}
-                className="bg-white p-6 rounded-lg shadow-md"
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
-                viewport={{ once: true }}
-              >
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
-                    <Image
-                      src={testimonial.avatar}
-                      alt={testimonial.name}
-                      width={48}
-                      height={48}
-                      className="object-cover"
-                    />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold">{testimonial.name}</h4>
-                    <p className="text-gray-500 text-sm">{testimonial.role}</p>
-                  </div>
-                </div>
-                <p className="text-gray-700 italic">"{testimonial.content}"</p>
-              </motion.div>
-            ))}
+<section className="py-16 bg-gray-50">
+  <div className="max-w-6xl mx-auto px-4">
+    <motion.h2 
+      className="text-3xl font-bold text-center mb-12"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      viewport={{ once: true }}
+    >
+      Ce que disent nos clients et artisans
+    </motion.h2>
+
+    <div className="flex flex-col sm:flex-wrap sm:flex-row justify-center gap-6">
+      {testimonials.map((testimonial, index) => (
+        <motion.div
+          key={index}
+          className="bg-white p-6 rounded-lg shadow-md w-full sm:max-w-[320px] flex-grow"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: index * 0.2 }}
+          viewport={{ once: true }}
+        >
+          <div className="flex items-center mb-4">
+            <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
+              <Image
+                src={testimonial.avatar}
+                alt={testimonial.name}
+                width={48}
+                height={48}
+                className="object-cover"
+              />
+            </div>
+            <div>
+              <h4 className="font-semibold">{testimonial.name}</h4>
+              <p className="text-gray-500 text-sm">{testimonial.role}</p>
+            </div>
           </div>
-        </div>
-      </section>
+          <p className="text-gray-700 italic">"{testimonial.content}"</p>
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</section>
+
+
+
 
       <div className="w-full flex flex-col items-center justify-center gap-5">
         <ContactForm />

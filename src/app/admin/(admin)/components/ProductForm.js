@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { X, Upload } from 'lucide-react';
 
-export default function ProductForm({ closeForm, productToEdit = null, onProductSaved }) {
+export default function ProductForm({ closeForm, productToEdit, onProductSaved }) {
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     nom: '',
@@ -19,6 +19,7 @@ export default function ProductForm({ closeForm, productToEdit = null, onProduct
   const fileInputRef = useRef(null);
   const priceInputRef = useRef(null);
 
+  // Charger les catégories
   useEffect(() => {
     async function fetchCategories() {
       try {
@@ -34,6 +35,7 @@ export default function ProductForm({ closeForm, productToEdit = null, onProduct
     fetchCategories();
   }, []);
 
+  // Pré-remplir si modification
   useEffect(() => {
     if (productToEdit) {
       setFormData({
@@ -90,7 +92,7 @@ export default function ProductForm({ closeForm, productToEdit = null, onProduct
     form.append('description', formData.description);
     form.append('categorie', formData.categorie);
     form.append('prix', formData.prix);
-    if (formData.image) form.append('image', formData.image);
+    if (formData.image) form.append('uploads', formData.image); // ✅ important
 
     try {
       const method = productToEdit ? 'PUT' : 'POST';
@@ -98,19 +100,15 @@ export default function ProductForm({ closeForm, productToEdit = null, onProduct
         ? `https://artiz-1ly2.onrender.com/api/admin/articles/${productToEdit.id}`
         : `https://artiz-1ly2.onrender.com/api/admin/articles`;
 
-      const res = await fetch(url, { method, body: form });
+      const res = await fetch(url, { method, body: form }); // ✅ PAS de headers
       const data = await res.json();
 
       if (!res.ok) throw new Error(data?.message || 'Erreur lors de l’enregistrement');
 
       alert(productToEdit ? 'Produit modifié avec succès !' : 'Produit ajouté avec succès !');
 
-      // ======= CORRECTION IMPORTANTE =======
-      if (onProductSaved) {
-        await onProductSaved();  // On recharge la liste complète des produits
-      }
+      if (onProductSaved) await onProductSaved();
       closeForm();
-      // ======================================
 
     } catch (err) {
       console.error(err);
@@ -147,9 +145,7 @@ export default function ProductForm({ closeForm, productToEdit = null, onProduct
 
           {/* Image */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Image du produit
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Image du produit</label>
             <div
               className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-gray-400"
               onClick={() => fileInputRef.current.click()}
@@ -179,9 +175,7 @@ export default function ProductForm({ closeForm, productToEdit = null, onProduct
 
           {/* Nom */}
           <div className="mb-4">
-            <label htmlFor="nom" className="block text-sm font-medium text-gray-700 mb-1">
-              Nom du produit
-            </label>
+            <label htmlFor="nom" className="block text-sm font-medium text-gray-700 mb-1">Nom du produit</label>
             <input
               type="text"
               id="nom"
@@ -195,9 +189,7 @@ export default function ProductForm({ closeForm, productToEdit = null, onProduct
 
           {/* Description */}
           <div className="mb-4">
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-              Description
-            </label>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Description</label>
             <textarea
               id="description"
               name="description"
@@ -211,9 +203,7 @@ export default function ProductForm({ closeForm, productToEdit = null, onProduct
 
           {/* Catégorie */}
           <div className="mb-4">
-            <label htmlFor="categorie" className="block text-sm font-medium text-gray-700 mb-1">
-              Catégorie
-            </label>
+            <label htmlFor="categorie" className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
             <select
               id="categorie"
               name="categorie"
@@ -223,29 +213,19 @@ export default function ProductForm({ closeForm, productToEdit = null, onProduct
               required
             >
               <option value="">-- Sélectionnez une catégorie --</option>
-              {categories.length > 0 ? (
-                categories.map((cat) =>
-                  typeof cat === 'string' ? (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ) : (
-                    <option key={cat.id || cat._id || cat.nom} value={cat.nom}>
-                      {cat.nom}
-                    </option>
-                  )
+              {categories.map((cat) =>
+                typeof cat === 'string' ? (
+                  <option key={cat} value={cat}>{cat}</option>
+                ) : (
+                  <option key={cat._id || cat.id || cat.nom} value={cat.nom}>{cat.nom}</option>
                 )
-              ) : (
-                <option disabled>Chargement...</option>
               )}
             </select>
           </div>
 
           {/* Prix */}
           <div className="mb-4">
-            <label htmlFor="prix" className="block text-sm font-medium text-gray-700 mb-1">
-              Prix (FCFA)
-            </label>
+            <label htmlFor="prix" className="block text-sm font-medium text-gray-700 mb-1">Prix (FCFA)</label>
             <div className="relative">
               <input
                 type="text"
